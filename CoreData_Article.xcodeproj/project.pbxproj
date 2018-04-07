@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		88D140E12078955300ACFA34 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D140E02078955300ACFA34 /* main.swift */; };
-		88D140E92078956E00ACFA34 /* Item.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 88D140E72078956E00ACFA34 /* Item.xcdatamodeld */; };
+		88D140E92078956E00ACFA34 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 88D140E72078956E00ACFA34 /* Model.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -60,7 +60,7 @@
 			isa = PBXGroup;
 			children = (
 				88D140E02078955300ACFA34 /* main.swift */,
-				88D140E72078956E00ACFA34 /* Item.xcdatamodeld */,
+				88D140E72078956E00ACFA34 /* Model.xcdatamodeld */,
 			);
 			path = CoreData_Article;
 			sourceTree = "<group>";
@@ -123,7 +123,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				88D140E92078956E00ACFA34 /* Item.xcdatamodeld in Sources */,
+				88D140E92078956E00ACFA34 /* Model.xcdatamodeld in Sources */,
 				88D140E12078955300ACFA34 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -279,13 +279,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		88D140E72078956E00ACFA34 /* Item.xcdatamodeld */ = {
+		88D140E72078956E00ACFA34 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				88D140E82078956E00ACFA34 /* Item.xcdatamodel */,
 			);
 			currentVersion = 88D140E82078956E00ACFA34 /* Item.xcdatamodel */;
-			path = Item.xcdatamodeld;
+			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

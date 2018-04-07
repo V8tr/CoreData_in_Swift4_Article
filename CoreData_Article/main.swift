@@ -8,21 +8,64 @@
 
 import CoreData
 
-let persistentContainer = NSPersistentContainer(name: "Item")
+let persistentContainer = NSPersistentContainer(name: "Model")
 
-persistentContainer.loadPersistentStores { (storeDescription, error) in
-    if let error = error as NSError? {
-        // Replace this implementation with code to handle the error appropriately.
-        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-        
-        /*
-         Typical reasons for an error here include:
-         * The parent directory does not exist, cannot be created, or disallows writing.
-         * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-         * The device is out of space.
-         * The store could not be migrated to the current model version.
-         Check the error message to determine what the actual problem was.
-         */
-        fatalError("Unresolved error \(error), \(error.userInfo)")
+let group = DispatchGroup()
+
+group.enter()
+
+persistentContainer.loadPersistentStores { storeDescription, error in
+    if let error = error {
+        assertionFailure(error.localizedDescription)
     }
+    
+    print("Core Data stack has been initialized with description: \(storeDescription)")
+    
+    group.leave()
 }
+
+group.wait()
+
+// Enforce clean run
+try? FileManager.default.removeItem(at: NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("CoreData_Article.storedata"))
+
+let item = NSEntityDescription.insertNewObject(forEntityName: "Item", into: persistentContainer.viewContext) as! Item
+
+print(item)
+
+item.name = "Some item"
+
+do {
+    try persistentContainer.viewContext.save()
+    print("Item named '\(item.name!)' has been successfully saved.")
+} catch {
+    assertionFailure("Failed to save item: \(error)")
+}
+
+let itemsFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Item")
+
+do {
+    let fetchedItems = try persistentContainer.viewContext.fetch(itemsFetch) as! [Item]
+    print("Fetched items: \(fetchedItems)")
+} catch {
+    assertionFailure("Failed to fetch items: \(error)")
+}
+
+persistentContainer.viewContext.delete(item)
+
+do {
+    let fetchedItems = try persistentContainer.viewContext.fetch(itemsFetch) as! [Item]
+    print("Fetched items: \(fetchedItems)")
+} catch {
+    assertionFailure("Failed to fetch items: \(error)")
+}
+
+
+
+
+
+
+
+
+
+
