@@ -8,7 +8,13 @@
 
 import CoreData
 
+// 1. Initialize
+
 let persistentContainer = NSPersistentContainer(name: "Model")
+
+let description = NSPersistentStoreDescription()
+description.type = NSInMemoryStoreType
+persistentContainer.persistentStoreDescriptions = [description]
 
 let group = DispatchGroup()
 
@@ -26,46 +32,28 @@ persistentContainer.loadPersistentStores { storeDescription, error in
 
 group.wait()
 
-// Enforce clean run
-try? FileManager.default.removeItem(at: NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("CoreData_Article.storedata"))
+// 2. Create new item
 
-let item = NSEntityDescription.insertNewObject(forEntityName: "Item", into: persistentContainer.viewContext) as! Item
+let context = persistentContainer.viewContext
 
+let item = NSEntityDescription.insertNewObject(forEntityName: "Item", into: context) as! Item
 print(item)
 
+// 3. Save item
+
 item.name = "Some item"
+try! context.save()
+print("Item named '\(item.name!)' has been successfully saved.")
 
-do {
-    try persistentContainer.viewContext.save()
-    print("Item named '\(item.name!)' has been successfully saved.")
-} catch {
-    assertionFailure("Failed to save item: \(error)")
-}
+// 4. Fetch items
 
-let itemsFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Item")
+let itemsFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Item")
+let fetchedItems = try! context.fetch(itemsFetchRequest) as! [Item]
+print("Fetched items: \(fetchedItems)")
 
-do {
-    let fetchedItems = try persistentContainer.viewContext.fetch(itemsFetch) as! [Item]
-    print("Fetched items: \(fetchedItems)")
-} catch {
-    assertionFailure("Failed to fetch items: \(error)")
-}
+// 5. Delete item
 
-persistentContainer.viewContext.delete(item)
+context.delete(item)
 
-do {
-    let fetchedItems = try persistentContainer.viewContext.fetch(itemsFetch) as! [Item]
-    print("Fetched items: \(fetchedItems)")
-} catch {
-    assertionFailure("Failed to fetch items: \(error)")
-}
-
-
-
-
-
-
-
-
-
-
+let fetchedItemsAfterDelete = try! context.fetch(itemsFetchRequest) as! [Item]
+print("Fetched items: \(fetchedItemsAfterDelete)")
